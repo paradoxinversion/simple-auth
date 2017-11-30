@@ -1,7 +1,5 @@
 const LocalStrategy = require("passport-local").Strategy;
 const User = require("../src/controllers/db.js");
-// const passport = require("passport");
-
 
 module.exports = function(passport){
 
@@ -28,7 +26,7 @@ module.exports = function(passport){
     Here we configure two different local strategies for passport--
     One handles signing up, one handles signing in.
   */
-  
+
   passport.use('local-signup',new LocalStrategy(
     function(username, password, done){
       return User.addUser(username, password)

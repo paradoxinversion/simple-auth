@@ -1,13 +1,12 @@
 const passport = require("passport");
 const express = require("express");
-const User = require("../controllers/db");
 const router = express.Router();
 
 const isLoggedIn = function isLoggedIn(req, res, next){
   if (req.isAuthenticated()){
     return next();
   }
-
+  
   res.redirect('/');
 };
 
@@ -37,8 +36,6 @@ router.get("/log-out", function(req, res){
 });
 
 router.get("/authenticated", isLoggedIn, function(req, res){
-  console.log(req.session.passport.user)
-
   res.render("authenticated-area", {user: req.session.passport.user});
 });
 module.exports = router;
