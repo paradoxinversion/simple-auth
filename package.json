@@ -1,7 +1,7 @@
 {
   "name": "simple-auth",
   "version": "1.0.0",
-  "description": "",
+  "description": "A simple implementation of the Passport Local Strategy",
   "main": "./src/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
