@@ -6,28 +6,44 @@ const passport = require("passport");
 const logger = require("morgan");
 const LocalStrategy = require("passport-local").Strategy;
 const User = require("./controllers/db.js");
-
+const index = require("./routes/index.js");
 
 const app = express();
 
-const index = require("./routes/index.js");
+passport.serializeUser(function(user, done){
+  done(null, user.id);
+});
 
-app.use(bodyParser.urlencoded({extended: false}));
-app.use(bodyParser.json());
+passport.deserializeUser(function(id, done){
+  User.getUserById(id)
+    .then(user => {
+      done(null, user);
+    })
+    .catch(error => {
+      done(error)
+    });
+});
 
-app.set('view engine', 'pug');
-app.set('views', path.join(__dirname,'/views'));
-app.use(logger('dev'));
-app.use(express.static(path.join(__dirname, 'public')));
-
-app.use(session(
-  {
-    secret: "authentication",
-    resave: "true",
-    saveUninitialized: "false"
+//Authentication Strategies
+passport.use('local-signup',new LocalStrategy(
+  function(username, password, done){
+    console.log("signup strategy")
+    return User.addUser(username, password)
+      .then(user => {
+        if (user){
+          return done(null, user);
+        } else{
+          return done(null, false);
+        }
+      })
+      .catch(error => {
+        console.log(error);
+        done(error);
+      });
   }
 ));
-passport.use(new LocalStrategy(
+
+passport.use('local-login',new LocalStrategy(
   function(username, password, done){
     return User.getUserByName(username)
       .then(user => {
@@ -51,19 +67,20 @@ passport.use(new LocalStrategy(
   }
 ));
 
-passport.serializeUser(function(user, done){
-  done(null, user.id);
-});
-
-passport.deserializeUser(function(id, done){
-  User.getUserById(id)
-    .then(user => {
-      done(err, user);
-    })
-    .catch(error => {
-      console.log(error);
-    });
-});
+// require('../config/passport');
+app.set('view engine', 'pug');
+app.set('views', path.join(__dirname,'/views'));
+app.use(logger('dev'));
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
+app.use(session(
+  {
+    secret: "authentication",
+    resave: "true",
+    saveUninitialized: "false"
+  }
+));
 
 app.use(passport.initialize());
 app.use(passport.session());

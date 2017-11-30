@@ -4,4 +4,6 @@ html
   body
     a(href="/sign-up") Sign Up
     a(href="/log-in") Log In
+    if user
+      a(href="/log-out") Log Out
     block content

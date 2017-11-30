@@ -8,7 +8,7 @@ const crypt = require("./crypt.js");
  * @returns {Object} The user record if it exists, null if no user is found with userName
  */
 const getUserByName = async function getUser(userName){
-  const user = await db.oneOrNone('SELECT * FROM users WHERE name = $1', [userName]);
+  const user = await db.oneOrNone('SELECT * FROM users WHERE username = $1', [userName]);
   return user;
 };
 
@@ -30,10 +30,10 @@ const getUserById = async function getUserById(userId){
  * @returns {string} that password, encrypted.
  */
 const addUser = async function addUser(username, password){
-  const sql = 'INSERT INTO users(name, password) VALUES ($1, $2) RETURNING *';
+  const sql = 'INSERT INTO users(username, password) VALUES ($1, $2) RETURNING *';
   return await db.task("add-user-task", async t => {
     try {
-      const user = await t.oneOrNone('SELECT id FROM users WHERE name = $1', [username]);
+      const user = await t.oneOrNone('SELECT id FROM users WHERE username = $1', [username]);
       if (user){
         const userExistsError = new Error("User Already Exists");
         userExistsError.code = 409;
