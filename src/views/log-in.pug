@@ -1,0 +1,7 @@
+extends layout
+block content
+  div.form-container
+    form(id="log-in-form" name="log-in-form" method="post" action="/log-in" class="vertical-form")
+      input(name="username" placeholder="Username" form="log-in-form")
+      input(name="password" placeholder="Password" form="log-in-form")
+      button(form="log-in-form") Log In

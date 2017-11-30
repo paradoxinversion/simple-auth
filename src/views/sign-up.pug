@@ -1,0 +1,7 @@
+extends layout
+block content
+  div.form-container
+    form(id="sign-up-form" name="sign-up-form" method="POST" action="/sign-up" class="vertical-form")
+      input(type="text" id="username" name="username" placeholder="Username" form="sign-up-form")
+      input(type="password" id="password" name="password" placeholder="Password" form="sign-up-form")
+      button(type="submit") Sign Up
